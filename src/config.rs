@@ -2,6 +2,7 @@ use crate::mime::MimeMatcher;
 use crate::random::RandomURLConfig;
 use byte_unit::Byte;
 use config::{self, ConfigError};
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
@@ -45,6 +46,8 @@ pub struct ServerConfig {
     pub landing_page: Option<String>,
     /// Expose version.
     pub expose_version: Option<bool>,
+    /// Highlight.js style
+    pub style: Option<String>,
 }
 
 /// Paste configuration.
@@ -64,6 +67,9 @@ pub struct PasteConfig {
     pub duplicate_files: Option<bool>,
     /// Delete expired files.
     pub delete_expired_files: Option<CleanupConfig>,
+    /// Highlight override.
+    #[serde(default)]
+    pub highlight_override: HashMap<String, String>,
 }
 
 /// Cleanup configuration.
@@ -80,6 +86,7 @@ impl Config {
     /// Parses the config file and returns the values.
     pub fn parse(path: &Path) -> Result<Config, ConfigError> {
         config::Config::builder()
+            .set_default("style", "default").unwrap()
             .add_source(config::File::from(path))
             .add_source(config::Environment::default().separator("__"))
             .build()?

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>${file}</title>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/${style}.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+	<script>
+		var xhr= new XMLHttpRequest();
+		xhr.open('GET', '${file}', true);
+		xhr.onreadystatechange= function() {
+		    if (this.readyState!==4) return;
+		    if (this.status!==200) return; // or whatever error handling you want
+		    document.getElementById('h').innerHTML= this.responseText;
+			hljs.highlightAll();
+		};
+		xhr.send();
+	</script>
+	</head>
+	<body>
+		<pre><code id="h" class="${type}">
+		</code></pre>
+	</body>
+</html>

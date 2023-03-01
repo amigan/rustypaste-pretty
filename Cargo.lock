@@ -1399,6 +1399,7 @@ dependencies = [
  "ring",
  "serde",
  "serde_regex",
+ "text-template",
  "url",
 ]
 
@@ -1562,6 +1563,12 @@ checksum = "be55cf8942feac5c765c2c993422806843c9a9a45d4d5c407ad6dd2ea95eb9b6"
 dependencies = [
  "winapi-util",
 ]
+
+[[package]]
+name = "text-template"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "51bcc3e9514cba67c087126b18600010c7c29b0cb51a6f6bc75e5058c2369bba"
 
 [[package]]
 name = "time"

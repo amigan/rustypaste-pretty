@@ -1,6 +1,8 @@
 <a href="https://github.com/orhun/rustypaste"><img src="img/rustypaste_logo.png" width="500"></a>
 
-**Rustypaste** is a minimal file upload/pastebin service.
+**Rustypaste-pretty** is a minimal file upload/pastebin service with client side highlighting provided by highlight.js.
+
+Just add `?pretty` to the end of a link to highlight!
 
 ```sh
 $ echo "some text" > awesome.txt
