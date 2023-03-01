@@ -8,7 +8,9 @@
 [![Docker Builds](https://img.shields.io/github/actions/workflow/status/orhun/rustypaste/docker.yml?style=flat&labelColor=823213&color=2c2c2c&label=docker&logo=Docker&logoColor=white)](https://hub.docker.com/r/orhunp/rustypaste)
 [![Documentation](https://img.shields.io/docsrs/rustypaste?style=flat&labelColor=823213&color=2c2c2c&logo=Rust&logoColor=white)](https://docs.rs/rustypaste/)
 
-**Rustypaste** is a minimal file upload/pastebin service.
+**Rustypaste-pretty** is a minimal file upload/pastebin service with client side highlighting provided by highlight.js.
+
+Just add `?pretty` to the end of a link to highlight!
 
 ```sh
 $ echo "some text" > awesome.txt
