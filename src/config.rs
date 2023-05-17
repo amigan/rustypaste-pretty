@@ -31,6 +31,8 @@ pub struct Settings {
 pub struct ServerConfig {
     /// The socket address to bind.
     pub address: String,
+    /// URL that can be used to access the server externally.
+    pub url: Option<String>,
     /// Number of workers to start.
     pub workers: Option<usize>,
     /// Maximum content length.
@@ -63,8 +65,11 @@ pub struct PasteConfig {
     /// Media type blacklist.
     #[serde(default)]
     pub mime_blacklist: Vec<String>,
-    /// Allow duplicate uploads
+    /// Allow duplicate uploads.
     pub duplicate_files: Option<bool>,
+    /// Default expiry time.
+    #[serde(default, with = "humantime_serde")]
+    pub default_expiry: Option<Duration>,
     /// Delete expired files.
     pub delete_expired_files: Option<CleanupConfig>,
     /// Highlight override.

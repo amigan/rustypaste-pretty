@@ -8,12 +8,12 @@ on:
     branches:
       - master
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: "0 0 * * 0"
 
 jobs:
   check:
     name: Check
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -22,7 +22,7 @@ jobs:
           profile: minimal
           override: true
       - name: Checkout the repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Check the project files
         uses: actions-rs/cargo@v1
         with:
@@ -31,7 +31,7 @@ jobs:
 
   test:
     name: Test suite
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -39,7 +39,7 @@ jobs:
           toolchain: stable
           override: true
       - name: Checkout the repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Setup cargo-tarpaulin
         run: |
           curl -s https://api.github.com/repos/xd009642/tarpaulin/releases/latest | \
@@ -49,7 +49,7 @@ jobs:
       - name: Run tests
         run: cargo tarpaulin --out Xml --verbose -- --test-threads 1
       - name: Upload reports to codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           name: code-coverage-report
           file: cobertura.xml
@@ -60,7 +60,7 @@ jobs:
 
   fixtures:
     name: Test fixtures
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -69,7 +69,7 @@ jobs:
           profile: minimal
           override: true
       - name: Checkout the repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Build the project
         uses: actions-rs/cargo@v1
         with:
@@ -84,7 +84,7 @@ jobs:
 
   clippy:
     name: Lints
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -94,7 +94,7 @@ jobs:
           components: clippy
           override: true
       - name: Checkout the repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Check the lints
         uses: actions-rs/cargo@v1
         with:
@@ -103,7 +103,7 @@ jobs:
 
   rustfmt:
     name: Formatting
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -113,7 +113,7 @@ jobs:
           components: rustfmt
           override: true
       - name: Checkout the repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Check the formatting
         uses: actions-rs/cargo@v1
         with:
@@ -122,10 +122,10 @@ jobs:
 
   lychee:
     name: Links
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
       - name: Check the links
         uses: lycheeverse/lychee-action@v1
         with:

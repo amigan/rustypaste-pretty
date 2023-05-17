@@ -1,5 +1,13 @@
 <a href="https://github.com/orhun/rustypaste"><img src="img/rustypaste_logo.png" width="500"></a>
 
+[![GitHub Release](https://img.shields.io/github/v/release/orhun/rustypaste?style=flat&labelColor=823213&color=2c2c2c&logo=GitHub&logoColor=white)](https://github.com/orhun/rustypaste/releases)
+[![Crate Release](https://img.shields.io/crates/v/rustypaste?style=flat&labelColor=823213&color=2c2c2c&logo=Rust&logoColor=white)](https://crates.io/crates/rustypaste/)
+[![Coverage](https://img.shields.io/codecov/c/gh/orhun/rustypaste?style=flat&labelColor=823213&color=2c2c2c&logo=Codecov&logoColor=white)](https://codecov.io/gh/orhun/rustypaste)
+[![Continuous Integration](https://img.shields.io/github/actions/workflow/status/orhun/rustypaste/ci.yml?branch=master&style=flat&labelColor=823213&color=2c2c2c&logo=GitHub%20Actions&logoColor=white)](https://github.com/orhun/rustypaste/actions?query=workflow%3A%22Continuous+Integration%22)
+[![Continuous Deployment](https://img.shields.io/github/actions/workflow/status/orhun/rustypaste/cd.yml?style=flat&labelColor=823213&color=2c2c2c&logo=GitHub%20Actions&logoColor=white&label=deploy)](https://github.com/orhun/rustypaste/actions?query=workflow%3A%22Continuous+Deployment%22)
+[![Docker Builds](https://img.shields.io/github/actions/workflow/status/orhun/rustypaste/docker.yml?style=flat&labelColor=823213&color=2c2c2c&label=docker&logo=Docker&logoColor=white)](https://hub.docker.com/r/orhunp/rustypaste)
+[![Documentation](https://img.shields.io/docsrs/rustypaste?style=flat&labelColor=823213&color=2c2c2c&logo=Rust&logoColor=white)](https://docs.rs/rustypaste/)
+
 **Rustypaste-pretty** is a minimal file upload/pastebin service with client side highlighting provided by highlight.js.
 
 Just add `?pretty` to the end of a link to highlight!
@@ -14,6 +22,8 @@ $ curl https://paste.site.com/safe-toad.txt
 some text
 ```
 
+The public instance is available at [https://rustypaste.shuttleapp.rs](https://rustypaste.shuttleapp.rs) 🚀
+
 ## Features
 
 - File upload & URL shortening & upload from URL
@@ -22,6 +32,7 @@ some text
     - pet name (e.g. `capital-mosquito.txt`)
     - alphanumeric string (e.g. `yB84D2Dv.txt`)
   - supports expiring links
+    - auto-expiration of files (optional)
     - auto-deletion of expired files (optional)
   - supports one shot links (can only be viewed once)
   - guesses MIME types
@@ -55,9 +66,17 @@ cargo install rustypaste
 pacman -S rustypaste
 ```
 
+### Alpine Linux
+
+`rustypaste` is available for [Alpine Edge](https://pkgs.alpinelinux.org/packages?name=rustypaste&branch=edge). It can be installed via [apk](https://wiki.alpinelinux.org/wiki/Alpine_Package_Keeper) after enabling the [testing repository](https://wiki.alpinelinux.org/wiki/Repositories).
+
+```sh
+apk add rustypaste
+```
+
 ### Binary releases
 
-See the available binaries on [releases](https://github.com/orhun/rustypaste/releases/) page.
+See the available binaries on the [releases](https://github.com/orhun/rustypaste/releases/) page.
 
 ### Build from source
 
@@ -67,11 +86,32 @@ cd rustypaste/
 cargo build --release
 ```
 
-#### Testing
+#### Feature flags
+
+- `shuttle`: enable an entry point for deploying on Shuttle
+- `openssl`: use distro OpenSSL (binary size is reduced ~20% in release mode)
+- `rustls`: use [rustls](https://github.com/rustls/rustls) (enabled as default)
+
+To enable a feature for build, pass `--features` flag to `cargo build` command.
+
+For example, to reuse the OpenSSL present on a distro already:
 
 ```sh
-# run unit tests
+cargo build --release --no-default-features --features openssl
+```
+
+#### Testing
+
+##### Unit tests
+
+```sh
 cargo test -- --test-threads 1
+```
+
+##### Test Fixtures
+
+```sh
+./fixtures/test-fixtures.sh
 ```
 
 ## Usage

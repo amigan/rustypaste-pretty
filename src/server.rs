@@ -28,7 +28,9 @@ async fn index(config: web::Data<RwLock<Config>>) -> Result<HttpResponse, Error>
         .read()
         .map_err(|_| error::ErrorInternalServerError("cannot acquire config"))?;
     match &config.server.landing_page {
-        Some(page) => Ok(HttpResponse::Ok().body(page.clone())),
+        Some(page) => Ok(HttpResponse::Ok()
+            .content_type("text/plain; charset=\"UTF-8\"")
+            .body(page.clone())),
         None => Ok(HttpResponse::Found()
             .append_header(("Location", env!("CARGO_PKG_HOMEPAGE")))
             .finish()),
@@ -158,6 +160,18 @@ async fn upload(
 ) -> Result<HttpResponse, Error> {
     let connection = request.connection_info().clone();
     let host = connection.peer_addr().unwrap_or("unknown host");
+    let server_url = match config
+        .read()
+        .map_err(|_| error::ErrorInternalServerError("cannot acquire config"))?
+        .server
+        .url
+        .clone()
+    {
+        Some(v) => v,
+        None => {
+            format!("{}://{}", connection.scheme(), connection.host(),)
+        }
+    };
     auth::check(
         host,
         request.headers(),
@@ -169,7 +183,16 @@ async fn upload(
             .as_ref()
             .cloned()),
     )?;
-    let expiry_date = header::parse_expiry_date(request.headers())?;
+    let time = util::get_system_time()?;
+    let mut expiry_date = header::parse_expiry_date(request.headers(), time)?;
+    if expiry_date.is_none() {
+        expiry_date = config
+            .read()
+            .map_err(|_| error::ErrorInternalServerError("cannot acquire config"))?
+            .paste
+            .default_expiry
+            .and_then(|v| time.checked_add(v).map(|t| t.as_millis()));
+    }
     let mut urls: Vec<String> = Vec::new();
     while let Some(item) = payload.next().await {
         let mut field = item?;
@@ -208,9 +231,8 @@ async fn upload(
                     .get_file(bytes_checksum)
                 {
                     urls.push(format!(
-                        "{}://{}/{}\n",
-                        connection.scheme(),
-                        connection.host(),
+                        "{}/{}\n",
+                        server_url,
                         file.path
                             .file_name()
                             .map(|v| v.to_string_lossy())
@@ -248,12 +270,7 @@ async fn upload(
                 Byte::from_bytes(paste.data.len() as u128).get_appropriate_unit(false),
                 host
             );
-            urls.push(format!(
-                "{}://{}/{}\n",
-                connection.scheme(),
-                connection.host(),
-                file_name
-            ));
+            urls.push(format!("{}/{}\n", server_url, file_name));
         } else {
             log::warn!("{} sent an invalid form field", host);
             return Err(error::ErrorBadRequest("invalid form field"));
