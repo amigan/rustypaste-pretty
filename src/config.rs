@@ -74,7 +74,7 @@ pub struct PasteConfig {
     pub delete_expired_files: Option<CleanupConfig>,
     /// Highlight override.
     #[serde(default)]
-    pub highlight_override: HashMap<String, String>,
+    pub highlight_override: Option<HashMap<String, String>>,
 }
 
 /// Cleanup configuration.

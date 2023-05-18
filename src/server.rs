@@ -95,8 +95,9 @@ async fn serve(
                     None => "default",
                 });
                 let mime_str = mime_type.to_string();
-                let overrides = &config.paste.highlight_override;
-                values.insert("type", if overrides.contains_key(&mime_str) { overrides[&mime_str].as_str() } else { "" });
+                if let Some(overrides) = &config.paste.highlight_override {
+                    values.insert("type", if overrides.contains_key(&mime_str) { overrides[&mime_str].as_str() } else { "" });
+                }
                 let rendered = tmpl.fill_in(&values);
                 return Ok(HttpResponse::Ok().content_type(mime::TEXT_HTML).body(rendered.to_string()))
             }
