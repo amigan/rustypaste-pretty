@@ -10,7 +10,9 @@
 
 **Rustypaste-pretty** is a minimal file upload/pastebin service with client side highlighting provided by highlight.js.
 
-Just add `?pretty` to the end of a link to highlight!
+It will use pretty mode if the client sends an `Accept:` header with `text/html` present and
+`server.pretty_default` is true in the config, or if `?pretty` is in the query string.
+Use `?nopretty` in the query string to force disable.
 
 ```sh
 $ echo "some text" > awesome.txt
