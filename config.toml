@@ -2,7 +2,7 @@
 refresh_rate = "1s"
 
 [server]
-address="127.0.0.1:8020"
+address="0.0.0.0:8020"
 #url = "https://rustypaste.shuttleapp.rs"
 #workers=4
 max_content_length = "10MB"
@@ -10,6 +10,7 @@ upload_path = "./upload"
 timeout = "30s"
 expose_version = false
 style="monokai"
+pretty_default = true
 landing_page = """
 ┬─┐┬ ┬┌─┐┌┬┐┬ ┬┌─┐┌─┐┌─┐┌┬┐┌─┐
 ├┬┘│ │└─┐ │ └┬┘├─┘├─┤└─┐ │ ├┤

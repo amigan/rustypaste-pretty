@@ -10,6 +10,9 @@ pub mod random;
 /// Server routes.
 pub mod server;
 
+/// Pretty renderer.
+pub mod pretty;
+
 /// HTTP headers.
 pub mod header;
 

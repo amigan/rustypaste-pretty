@@ -48,6 +48,8 @@ pub struct ServerConfig {
     pub landing_page: Option<String>,
     /// Expose version.
     pub expose_version: Option<bool>,
+    /// Default to pretty when Accept: allows it.
+    pub pretty_default: Option<bool>,
     /// Highlight.js style
     pub style: Option<String>,
 }

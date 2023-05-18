@@ -4,9 +4,9 @@ use crate::file::Directory;
 use crate::header::{self, ContentDisposition};
 use crate::mime as mime_util;
 use crate::paste::{Paste, PasteType};
+use crate::pretty;
 use crate::util;
 use crate::AUTH_TOKEN_ENV;
-use text_template::*;
 use actix_files::NamedFile;
 use actix_multipart::Multipart;
 use actix_web::{error, get, post, web, Error, HttpRequest, HttpResponse};
@@ -19,7 +19,6 @@ use std::env;
 use std::fs;
 use std::str;
 use std::sync::RwLock;
-use std::collections::HashMap;
 
 /// Shows the landing page.
 #[get("/")]
@@ -85,21 +84,8 @@ async fn serve(
                     .map_err(error::ErrorInternalServerError)?
             };
 
-            if request.query_string() == "pretty" {
-                let mut values = HashMap::new();
-                let tmpl_bytes = str::from_utf8(include_bytes!("pretty.html")).unwrap();
-                let tmpl = Template::from(tmpl_bytes);
-                values.insert("file", file.as_str());
-                values.insert("style", match &config.server.style {
-                    Some(style) => style.as_str(),
-                    None => "default",
-                });
-                let mime_str = mime_type.to_string();
-                if let Some(overrides) = &config.paste.highlight_override {
-                    values.insert("type", if overrides.contains_key(&mime_str) { overrides[&mime_str].as_str() } else { "" });
-                }
-                let rendered = tmpl.fill_in(&values);
-                return Ok(HttpResponse::Ok().content_type(mime::TEXT_HTML).body(rendered.to_string()))
+            if pretty::want_pretty(&request, config.server.pretty_default.unwrap_or(false)) {
+                return pretty::render_pretty(file, mime_type, &config)
             }
 
             let response = NamedFile::open(&path)?
